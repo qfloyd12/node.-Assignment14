@@ -35,4 +35,11 @@
     margin-top: 10px;
 }
 
+@media (max-width: 760px) {
+    .modal-content {
+        width: 90%;
+    }
+
+}
+
 
