@@ -1,50 +1,52 @@
-async function getCrafts() {
-    try {
-        const response = await fetch("/api/crafts");
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return await response.json();
-    } catch (error) {
-        console.error("error retrieving crafts data", error);
-        return [];
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/crafts')
+        .then(response => response.json())
+        .then(crafts => {
+            const gallery = document.getElementById('crafts-gallery');
+            crafts.forEach(craft => {
+                const html = `
+                    <div class="w3-quarter">
+                        <img src="${craft.img}" alt="${craft.name}" style="width:100%;cursor:pointer;" class="w3-hover-opacity" onclick="openModal('${craft.name.replace(/'/g, "\\'")}', '${craft.description.replace(/'/g, "\\'")}', '${craft.supplies.join(', ').replace(/'/g, "\\'")}', '${craft.img}')">
+                    </div>
+                `;
+                gallery.innerHTML += html;
+            });
+        })
+        .catch(error => console.error('Error fetching crafts:', error));
+});
+
+function openModal(name, description, supplies, imgSrc) {
+    closeModal(); 
+    const modalHTML = `
+        <div id="craftModal" class="modal" onclick="closeModal()">
+            <div class="modal-content" onclick="event.stopPropagation();">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img src="${imgSrc}" alt="${name}" style="width:100%">
+                <div class="modal-info">
+                    <h2>${name}</h2>
+                    <p>${description}</p>
+                    <h3>Supplies:</h3>
+                    <p>${supplies}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    document.getElementById('craftModal').style.display = 'block';
+}
+
+function closeModal() {
+    const modal = document.getElementById('craftModal');
+    if (modal) {
+        modal.remove();
     }
 }
 
-async function showCrafts() {
-    const craftsJSON = await getCrafts();
-    const craftsDiv = document.getElementById("crafts-gallery");
-
-    if (craftsJSON.length === 0) {
-        craftsDiv.innerHTML = "<p>Sorry, no crafts available at the moment.</p>";
-        return;
+window.onclick = function(event) {
+    const modal = document.getElementById('craftModal');
+    if (event.target === modal) {
+        closeModal();
     }
+};
 
-    craftsJSON.forEach((craft) => {
-        const card = document.createElement("div");
-        card.className = 'w3-card';
-
-        const image = document.createElement("img");
-        image.src = craft.img;
-        image.alt = craft.name;
-        image.style.width = '100%';
-        card.appendChild(image);
-
-        const container = document.createElement("div");
-        container.className = 'w3-container';
-
-        const h3 = document.createElement("h3");
-        h3.textContent = craft.name;
-        container.appendChild(h3);
-
-        const p = document.createElement("p");
-        p.textContent = craft.description;
-        container.appendChild(p);
-
-        card.appendChild(container);
-
-        craftsDiv.appendChild(card);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', showCrafts);

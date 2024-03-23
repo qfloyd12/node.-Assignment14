@@ -143,7 +143,7 @@ app.get("/api/crafts", (req, res) => {
         name: "Tissue Ballerinas",
         description: "These beautiful dancers will look great on display",
         supplies: ["Pipe cleaner", "Tissue Paper", "Elastics"],
-        img: "images/tissue-dancer.jpeg"
+        img: "images/tisue-dancer.jpeg"
     };
     crafts[22] = {
         name: "Toilet Paper Roll Animals",
