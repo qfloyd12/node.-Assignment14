@@ -7,9 +7,43 @@
 </head>
 <body>
     <header>
-        <h1>Buy and Sell Crafts +</h1>
+        <h1>Buy and Sell Crafts <a href="#" id="add-link">+</a></h1>
     </header>
     <section id="crafts-gallery" class="w3-row-padding w3-padding-16 w3-center"></section>
+
+    <div id="add-craft-dialog" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span onclick="closeModal()" class="w3-button w3-display-topright">&times;</span>
+                <h2>Make Changes to your Craft</h2>
+                <form id="add-craft-form">
+                    <p>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </p>
+                    <p>
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" required></textarea>
+                    </p>
+                    <p>
+                        <label for="img">Select An Image:</label>
+                        <input type="file" id="img" name="img" accept="image/*">
+                        <img id="img-preview" src="" alt="Image preview" style="width:200px;height:300px;">
+                    </p>
+                    <div id="supply-section">
+                        <label for="supplies">Supplies:</label>
+                        <input type="text" id="supplies" name="supplies" required>
+                        <button type="button" id="add-supply">Add Supply</button>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" onclick="closeModal()">Cancel</button>
+                        <button type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>

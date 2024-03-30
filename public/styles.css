@@ -35,11 +35,94 @@
     margin-top: 10px;
 }
 
+.w3-modal-content {
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+}
+
+.w3-modal-content .w3-container {
+    padding: 20px;
+}
+
+.w3-modal-content h2 {
+    margin-top: 0;
+}
+
+.w3-modal-content > .w3-container:first-child {
+    background-color: #f0f0f0;
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.w3-button.w3-display-topright {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+}
+
+#add-craft-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#add-craft-form input[type="text"],
+#add-craft-form textarea {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#add-craft-form textarea {
+    height: 100px;
+}
+
+#img-preview {
+    display: none;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+#add-craft-form button[type="button"],
+#add-craft-form button[type="submit"] {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#add-supply {
+    background-color: #e7e7e7;
+    color: #333;
+}
+
+.action-buttons button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.action-buttons button:first-child {
+    background-color: #f44336;
+}
+
+#supply-section input[type="text"]:not(:first-child) {
+    margin-top: 5px;
+}
+
+.action-buttons:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 @media (max-width: 760px) {
     .modal-content {
         width: 90%;
     }
 
 }
-
 
