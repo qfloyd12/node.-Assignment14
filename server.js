@@ -170,7 +170,7 @@ app.get("/", (req, res) => {
 
 app.get("/api/crafts", (req, res) => {
     console.log("Requesting crafts API");
-    res.json(crafts);
+    res.json(crafts[0]);
 });
 
 
