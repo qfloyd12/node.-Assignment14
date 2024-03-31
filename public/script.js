@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(crafts => {
             const gallery = document.getElementById('crafts-gallery');
 
-            crafts[0].forEach(craft => { 
+            crafts.forEach(craft => { 
                 const html = `
                     <div class="w3-quarter">
                         <img src="${craft.img}" alt="${craft.name}" style="width:100%;cursor:pointer;" class="w3-hover-opacity craft-image" data-name="${craft.name}" data-description="${craft.description}" data-supplies="${craft.supplies.join(', ')}" data-img="${craft.img}">
