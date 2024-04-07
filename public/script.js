@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Event listener for showing the add craft dialog
+    
     document.getElementById('add-link').addEventListener('click', () => {
-        document.getElementById('form-mode').value = 'add'; // Ensure form is in 'add' mode
-        document.getElementById('original-name').value = ''; // Clear any previous original name
+        document.getElementById('form-mode').value = 'add'; 
+        document.getElementById('original-name').value = ''; 
         document.getElementById('add-craft-dialog').style.display = 'block';
     });
 
-    // Fetch existing crafts and display them
+ 
     fetch('/api/crafts')
         .then(response => response.json())
         .then(crafts => {
@@ -22,13 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching crafts:', error));
 
-    // Event listener for adding a new supply field
     document.getElementById('add-supply').addEventListener('click', () => addSupplyField());
 
-    // Event listener for changing the image preview
+
     document.getElementById('img').addEventListener('change', displayImagePreview);
 
-    // Form submission event for adding or updating crafts
+    
     document.getElementById('add-craft-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const mode = document.getElementById('form-mode').value;
@@ -66,11 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
         clearFormData();
     });
 
-    // Event listener for closing the modal dialog
+   
     document.querySelector('.action-buttons button[type="button"]').addEventListener('click', closeModal);
 });
 
-// Function to show details of a craft in a modal
+
 function showDetails(name, description, supplies, imgSrc) {
     document.body.insertAdjacentHTML('beforeend', `
         <div id="craftDetailsModal" class="w3-modal" style="display:block">
@@ -94,9 +93,9 @@ function showDetails(name, description, supplies, imgSrc) {
     `);
 }
 
-// Function to edit a craft
+
 function editCraft(name, description, supplies, imgSrc) {
-    // Indicate that the form is now in 'edit' mode and store the original name
+    
     document.getElementById('form-mode').value = 'edit';
     document.getElementById('original-name').value = name;
 
@@ -113,7 +112,7 @@ function editCraft(name, description, supplies, imgSrc) {
     document.getElementById('craftDetailsModal').remove();
 }
 
-// Function to delete a craft
+
 function deleteCraft(name) {
     const gallery = document.getElementById('crafts-gallery');
     const craftElement = gallery.querySelector(`div[data-name='${name}']`);
@@ -123,7 +122,7 @@ function deleteCraft(name) {
     document.getElementById('craftDetailsModal').remove();
 }
 
-// Function to add a new supply field
+
 function addSupplyField(value = '') {
     const supplySection = document.getElementById('supply-section');
     const newInput = document.createElement('input');
@@ -133,7 +132,7 @@ function addSupplyField(value = '') {
     supplySection.appendChild(newInput);
 }
 
-// Function for image preview
+
 function displayImagePreview(event) {
     const file = event.target.files[0];
     if (file) {
@@ -147,21 +146,21 @@ function displayImagePreview(event) {
     }
 }
 
-// Function to clear the form data
+
 function clearFormData() {
     document.getElementById('add-craft-form').reset();
     document.getElementById('img-preview').style.display = 'none';
     clearAdditionalSupplyFields();
 }
 
-// Function to clear additional supply fields
+
 function clearAdditionalSupplyFields() {
     const supplySection = document.getElementById('supply-section');
     const additionalInputs = supplySection.querySelectorAll('input[name="supplies"]:not(:first-of-type)');
     additionalInputs.forEach(input => input.remove());
 }
 
-// Function to close the modal dialog
+
 function closeModal() {
     const modal = document.getElementById('add-craft-dialog');
     if (modal.style.display === 'block') {
@@ -170,7 +169,7 @@ function closeModal() {
     }
 }
 
-// Event listener to close the add craft dialog if clicked outside
+
 window.onclick = function(event) {
     if (event.target === document.getElementById('add-craft-dialog')) {
         closeModal();
