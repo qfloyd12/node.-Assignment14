@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Buy and Sell Crafts</title>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -17,6 +18,8 @@
                 <span onclick="closeModal()" class="w3-button w3-display-topright">&times;</span>
                 <h2>Make Changes to your Craft</h2>
                 <form id="add-craft-form">
+                    <input type="hidden" id="form-mode" value="add">
+                    <input type="hidden" id="original-name" value="">
                     <p>
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" required>
@@ -28,10 +31,10 @@
                     <p>
                         <label for="img">Select An Image:</label>
                         <input type="file" id="img" name="img" accept="image/*">
-                        <img id="img-preview" src="" alt="Image preview" style="width:200px;height:300px;">
+                        <img id="img-preview" src="" alt="Image preview" style="display:none; width:200px; height:300px;">
                     </p>
                     <div id="supply-section">
-                        <label for="supplies">Supplies:</label>
+                        <label>Supplies:</label>
                         <input type="text" id="supplies" name="supplies" required>
                         <button type="button" id="add-supply">Add Supply</button>
                     </div>
