@@ -114,21 +114,12 @@ function editCraft(name, description, supplies, imgSrc) {
 
 
 function deleteCraft(name) {
-    // Send a DELETE request to the server
-    fetch(`/api/craft/${encodeURIComponent(name)}`, { method: 'DELETE' })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete the craft');
-            }
-            // Remove the craft element from the page
-            const gallery = document.getElementById('crafts-gallery');
-            const craftElement = gallery.querySelector(`div[data-name='${name}']`);
-            if (craftElement) {
-                gallery.removeChild(craftElement);
-            }
-            document.getElementById('craftDetailsModal').remove();
-        })
-        .catch(error => console.error('Error deleting craft:', error));
+    const gallery = document.getElementById('crafts-gallery');
+    const craftElement = gallery.querySelector(`div[data-name='${name}']`);
+    if (craftElement) {
+        gallery.removeChild(craftElement);
+    }
+    document.getElementById('craftDetailsModal').remove();
 }
 
 

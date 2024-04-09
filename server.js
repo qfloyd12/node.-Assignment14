@@ -202,18 +202,6 @@ app.post("/api/add-craft", upload.single('img'), (req, res) => {
     res.status(201).send('Craft added successfully');
 });
 
-app.delete("/api/craft/:name", (req, res) => {
-    const { name } = req.params;
-    const craftIndex = crafts[0].findIndex(craft => craft.name === name);
-    if (craftIndex > -1) {
-        crafts[0].splice(craftIndex, 1);
-        res.status(200).send('Craft deleted successfully');
-    } else {
-        res.status(404).send('Craft not found');
-    }
-});
-
-
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
 });
