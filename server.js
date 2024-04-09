@@ -1,13 +1,13 @@
 const express = require("express");
 const path = require("path");
-const Joi = require('joi'); 
-const multer = require('multer'); 
-const upload = multer({ dest: 'uploads/' }); 
+const Joi = require('joi');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true })); 
-app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 let crafts = [
     [
@@ -169,16 +169,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/crafts", (req, res) => {
-    console.log("Requesting crafts API");
-    res.json(crafts[0]);
+    res.json(crafts);
 });
-
 
 const craftSchema = Joi.object({
     name: Joi.string().required(),
     description: Joi.string().required(),
     supplies: Joi.array().items(Joi.string()).required(),
-   
+    img: Joi.string().required() // Assuming image paths are strings
 });
 
 app.post("/api/add-craft", upload.single('img'), (req, res) => {
@@ -187,19 +185,51 @@ app.post("/api/add-craft", upload.single('img'), (req, res) => {
         return res.status(400).send(error.details);
     }
 
-    if (!req.file) {
-        return res.status(400).send('Image file is required');
-    }
-
     const newCraft = {
         name: value.name,
         description: value.description,
-        supplies: JSON.parse(value.supplies),
-        img: req.file.path 
+        supplies: value.supplies,
+        img: req.file ? req.file.path : '' // Handle missing file case
     };
 
     crafts.push(newCraft);
     res.status(201).send('Craft added successfully');
+});
+
+// Handling craft deletion
+app.delete("/api/delete-craft/:name", (req, res) => {
+    const craftName = req.params.name;
+    const index = crafts.findIndex(craft => craft.name === craftName);
+    if (index !== -1) {
+        crafts.splice(index, 1);
+        res.send('Craft deleted successfully');
+    } else {
+        res.status(404).send('Craft not found');
+    }
+});
+
+// Handling craft editing
+app.put("/api/edit-craft/:name", upload.single('img'), (req, res) => {
+    const craftName = req.params.name;
+    const index = crafts.findIndex(craft => craft.name === craftName);
+    if (index === -1) {
+        res.status(404).send('Craft not found');
+        return;
+    }
+
+    const { error, value } = craftSchema.validate(req.body);
+    if (error) {
+        return res.status(400).send(error.details);
+    }
+
+    crafts[index] = {
+        name: value.name,
+        description: value.description,
+        supplies: value.supplies,
+        img: req.file ? req.file.path : crafts[index].img // Keep existing image if new one is not provided
+    };
+
+    res.send('Craft updated successfully');
 });
 
 app.listen(3000, () => {
