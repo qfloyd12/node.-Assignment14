@@ -1,19 +1,26 @@
 const express = require("express");
-const path = require("path");
-const Joi = require('joi'); 
-const multer = require('multer'); 
-
 const app = express();
+const Joi = require("joi");
+const multer = require("multer");
+const cors = require("cors");
+
 app.use(express.static("public"));
-// Serve images from the uploads directory as well
 app.use("/uploads", express.static("uploads"));
+app.use(express.json());
+app.use(cors());
 
-app.use(express.urlencoded({ extended: true })); 
-app.use(express.json()); 
 
-// Set up cors similar to the example if needed
-// const cors = require("cors");
-// app.use(cors());
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 
 let crafts = [  {
     "name": "Beaded JellyFish",
@@ -164,52 +171,85 @@ let crafts = [  {
     "description": "So much heart all in one",
     "supplies": ["Clay", "Glitter"],
     "img": "images/valentines-jar.webp"
-}  ]; // Start with an empty array
+}  ];
 
-// Custom storage configuration to save uploaded files in a specific directory with their original filenames
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(__dirname + "/index.html");
 });
+
 
 app.get("/api/crafts", (req, res) => {
-    console.log("Requesting crafts API");
-    res.json(crafts);
+  res.send(crafts);
 });
 
-const craftSchema = Joi.object({
-    name: Joi.string().required(),
-    description: Joi.string().required(),
-    supplies: Joi.string().required(), // Temporarily treat supplies as a JSON string for validation
+
+app.post("/api/crafts", upload.single("img"), (req, res) => {
+  const { error } = validateCraft(req.body);
+
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+
+  const newCraft = {
+    id: crafts.length + 1,
+    name: req.body.name,
+    description: req.body.description,
+    supplies: req.body.supplies.split(","),
+    img: req.file ? "uploads/" + req.file.filename : "",
+  };
+
+  crafts.push(newCraft);
+  res.send(newCraft);
 });
 
-app.post("/api/add-craft", upload.single('img'), (req, res) => {
-    const { error, value } = craftSchema.validate(req.body);
-    if (error) {
-        return res.status(400).send(error.details);
-    }
 
-    const newCraft = {
-        name: value.name,
-        description: value.description,
-        supplies: JSON.parse(value.supplies), // Parse supplies back into an array
-        img: "uploads/" + req.file.filename // Adjust path to match the uploaded file location
-    };
+app.put("/api/crafts/:id", upload.single("img"), (req, res) => {
+  const craft = crafts.find(c => c.id === parseInt(req.params.id));
+  if (!craft) {
+    return res.status(404).send("The craft with the given ID was not found.");
+  }
 
-    crafts.push(newCraft);
-    res.status(201).send('Craft added successfully');
+  const { error } = validateCraft(req.body);
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+
+  craft.name = req.body.name;
+  craft.description = req.body.description;
+  craft.supplies = req.body.supplies.split(",");
+  if (req.file) {
+    craft.img = "uploads/" + req.file.filename;
+  }
+
+  res.send(craft);
 });
+
+
+app.delete("/api/crafts/:id", (req, res) => {
+  const craft = crafts.find(c => c.id === parseInt(req.params.id));
+  if (!craft) {
+    return res.status(404).send("The craft with the given ID was not found.");
+  }
+
+  const index = crafts.indexOf(craft);
+  crafts.splice(index, 1);
+
+  res.send(craft);
+});
+
+
+function validateCraft(craft) {
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+    description: Joi.string().min(3).required(),
+    supplies: Joi.string().required(), 
+  });
+
+  return schema.validate(craft);
+}
+
 
 app.listen(3000, () => {
-    console.log("Server is listening on port 3000");
+  console.log("Server is listening on port 3000");
 });
