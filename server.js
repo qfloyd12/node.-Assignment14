@@ -10,13 +10,12 @@ app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
 mongoose
   .connect("mongodb+srv://qfloyd:myR7edfSSZug7AZe@atlascluster.gag1v4a.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster")
   .then(() => console.log("Connected to MongoDB..."))
   .catch(err => console.error("Could not connect to MongoDB...", err));
 
-// Define the Craft schema and model
+
 const craftSchema = new mongoose.Schema({
   name: String,
   description: String,
@@ -26,7 +25,7 @@ const craftSchema = new mongoose.Schema({
 
 const Craft = mongoose.model("Craft", craftSchema);
 
-// Configure Multer for image uploads
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/uploads/");
@@ -84,7 +83,7 @@ app.delete("/api/crafts/:id", async (req, res) => {
   res.send(craft);
 });
 
-// Craft validation function
+
 function validateCraft(craft) {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
@@ -95,7 +94,6 @@ function validateCraft(craft) {
   return schema.validate(craft);
 }
 
-// Start the server
 app.listen(3000, () => {
   console.log("Server is listening on port 3000");
 });
